@@ -3,6 +3,7 @@ import type { Locator, Page } from '@playwright/test';
 import { FederationHomeContent } from './fragments/home-content';
 import { FederationHomeFlextab } from './fragments/home-flextab';
 import { FederationSidenav } from './fragments/home-sidenav';
+import { Navbar } from '../../page-objects/fragments';
 
 export class FederationChannel {
 	private readonly page: Page;
@@ -13,11 +14,14 @@ export class FederationChannel {
 
 	readonly tabs: FederationHomeFlextab;
 
+	readonly navbar: Navbar;
+
 	constructor(page: Page) {
 		this.page = page;
 		this.content = new FederationHomeContent(page);
 		this.sidenav = new FederationSidenav(page);
 		this.tabs = new FederationHomeFlextab(page);
+		this.navbar = new Navbar(page);
 	}
 
 	get toastSuccess(): Locator {

@@ -1,6 +1,7 @@
 import type { Locator, Page } from '@playwright/test';
 
 import { HomeOmnichannelContent, HomeSidenav, HomeFlextab, OmnichannelSidenav } from './fragments';
+import { HomeChannel } from './home-channel';
 import { OmnichannelAgents } from './omnichannel-agents';
 import { OmnichannelCannedResponses } from './omnichannel-canned-responses';
 import { OmnichannelContacts } from './omnichannel-contacts-list';
@@ -11,9 +12,7 @@ import { OmnichannelRoomInfo } from './omnichannel-room-info';
 import { OmnichannelTranscript } from './omnichannel-transcript';
 import { OmnichannelTriggers } from './omnichannel-triggers';
 
-export class HomeOmnichannel {
-	readonly page: Page;
-
+export class HomeOmnichannel extends HomeChannel {
 	readonly content: HomeOmnichannelContent;
 
 	readonly sidenav: HomeSidenav;
@@ -41,7 +40,7 @@ export class HomeOmnichannel {
 	readonly roomInfo: OmnichannelRoomInfo;
 
 	constructor(page: Page) {
-		this.page = page;
+		super(page);
 		this.content = new HomeOmnichannelContent(page);
 		this.sidenav = new HomeSidenav(page);
 		this.tabs = new HomeFlextab(page);

@@ -1,10 +1,9 @@
 import type { Locator, Page } from '@playwright/test';
 
 import { HomeContent, HomeFlextab, HomeSidenav } from './fragments';
+import { HomeChannel } from './home-channel';
 
-export class HomeTeam {
-	private readonly page: Page;
-
+export class HomeTeam extends HomeChannel {
 	readonly content: HomeContent;
 
 	readonly sidenav: HomeSidenav;
@@ -12,7 +11,7 @@ export class HomeTeam {
 	readonly tabs: HomeFlextab;
 
 	constructor(page: Page) {
-		this.page = page;
+		super(page);
 		this.content = new HomeContent(page);
 		this.sidenav = new HomeSidenav(page);
 		this.tabs = new HomeFlextab(page);

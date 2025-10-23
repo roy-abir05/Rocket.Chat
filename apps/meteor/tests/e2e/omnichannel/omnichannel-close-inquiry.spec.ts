@@ -54,9 +54,7 @@ test.describe('Omnichannel close inquiry', () => {
 		});
 
 		await test.step('Expect to be able to close an inquiry conversation', async () => {
-			await agent.poHomeOmnichannel.content.btnCloseChat.click();
-			await agent.poHomeOmnichannel.content.inputModalClosingComment.type('any_comment');
-			await agent.poHomeOmnichannel.content.btnModalConfirm.click();
+			await agent.poHomeOmnichannel.content.closeChat();
 			await expect(agent.poHomeOmnichannel.toastSuccess).toBeVisible();
 		});
 

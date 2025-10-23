@@ -3,7 +3,7 @@ import { faker } from '@faker-js/faker';
 import { setupE2EEPassword } from './setupE2EEPassword';
 import { Users } from '../fixtures/userStates';
 import { EncryptedRoomPage } from '../page-objects/encrypted-room';
-import { HomeSidenav } from '../page-objects/fragments';
+import { Navbar, HomeSidenav } from '../page-objects/fragments';
 import { FileUploadModal } from '../page-objects/fragments/file-upload-modal';
 import { LoginPage } from '../page-objects/login';
 import { preserveSettings } from '../utils/preserveSettings';
@@ -14,6 +14,11 @@ const settingsList = ['E2E_Enable', 'E2E_Allow_Unencrypted_Messages'];
 preserveSettings(settingsList);
 
 test.describe('E2EE Encryption and Decryption - Basic Features', () => {
+	let loginPage: LoginPage;
+	let navbar: Navbar;
+	let encryptedRoomPage: EncryptedRoomPage;
+	let sidenav: HomeSidenav;
+
 	test.use({ storageState: Users.admin.state });
 
 	test.beforeAll(async ({ api }) => {
@@ -22,7 +27,10 @@ test.describe('E2EE Encryption and Decryption - Basic Features', () => {
 	});
 
 	test.beforeEach(async ({ api, page }) => {
-		const loginPage = new LoginPage(page);
+		loginPage = new LoginPage(page);
+		navbar = new Navbar(page);
+		encryptedRoomPage = new EncryptedRoomPage(page);
+		sidenav = new HomeSidenav(page);
 
 		await api.post('/method.call/e2e.resetOwnE2EKey', {
 			message: JSON.stringify({ msg: 'method', id: '1', method: 'e2e.resetOwnE2EKey', params: [] }),
@@ -34,10 +42,6 @@ test.describe('E2EE Encryption and Decryption - Basic Features', () => {
 	});
 
 	test('expect placeholder text in place of encrypted message', async ({ page }) => {
-		const loginPage = new LoginPage(page);
-		const encryptedRoomPage = new EncryptedRoomPage(page);
-		const sidenav = new HomeSidenav(page);
-
 		const channelName = faker.string.uuid();
 		const messageText = 'This is an encrypted message.';
 
@@ -61,7 +65,7 @@ test.describe('E2EE Encryption and Decryption - Basic Features', () => {
 
 		// Navigate to the encrypted channel WITHOUT entering the password
 
-		await sidenav.openChat(channelName);
+		await navbar.openChat(channelName);
 		await expect(encryptedRoomPage.encryptedIcon).toBeVisible();
 		await expect(encryptedRoomPage.encryptionNotReadyIndicator).toBeVisible();
 
@@ -72,10 +76,7 @@ test.describe('E2EE Encryption and Decryption - Basic Features', () => {
 	});
 
 	test('expect placeholder text in place of encrypted file upload description', async ({ page }) => {
-		const encryptedRoomPage = new EncryptedRoomPage(page);
-		const loginPage = new LoginPage(page);
 		const fileUploadModal = new FileUploadModal(page);
-		const sidenav = new HomeSidenav(page);
 
 		const channelName = faker.string.uuid();
 		const fileName = faker.system.commonFileName('txt');
@@ -132,7 +133,7 @@ test.describe('E2EE Encryption and Decryption - Basic Features', () => {
 
 		await expect(sidenav.btnCreateNew).toBeVisible();
 
-		await sidenav.openChat(channelName);
+		await navbar.openChat(channelName);
 		await expect(encryptedRoomPage.encryptedIcon).toBeVisible();
 
 		await expect(encryptedRoomPage.lastNthMessage(1).body).toHaveText(
