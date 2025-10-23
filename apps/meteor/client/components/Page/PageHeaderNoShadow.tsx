@@ -1,10 +1,9 @@
 import { Box, IconButton } from '@rocket.chat/fuselage';
-import { useDocumentTitle, FeaturePreview, FeaturePreviewOn, FeaturePreviewOff } from '@rocket.chat/ui-client';
+import { useDocumentTitle, HeaderToolbar } from '@rocket.chat/ui-client';
 import { useLayout } from '@rocket.chat/ui-contexts';
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { HeaderToolbar } from '../Header';
 import SidebarToggler from '../SidebarToggler';
 
 type PageHeaderProps = {
@@ -16,7 +15,7 @@ type PageHeaderProps = {
 const PageHeaderNoShadow = ({ children = undefined, title, onClickBack, ...props }: PageHeaderProps) => {
 	const { t } = useTranslation();
 
-	const { isMobile, isTablet, isEmbedded } = useLayout();
+	const { isTablet, isEmbedded } = useLayout();
 
 	useDocumentTitle(typeof title === 'string' ? title : undefined);
 
@@ -32,23 +31,11 @@ const PageHeaderNoShadow = ({ children = undefined, title, onClickBack, ...props
 				alignItems='center'
 				color='default'
 			>
-				<FeaturePreview feature='newNavigation'>
-					<FeaturePreviewOff>
-						{isMobile ? (
-							<HeaderToolbar>
-								<SidebarToggler />
-							</HeaderToolbar>
-						) : null}
-					</FeaturePreviewOff>
-					<FeaturePreviewOn>
-						{isTablet && isEmbedded ? (
-							<HeaderToolbar>
-								<SidebarToggler />
-							</HeaderToolbar>
-						) : null}
-					</FeaturePreviewOn>
-				</FeaturePreview>
-
+				{isTablet && isEmbedded ? (
+					<HeaderToolbar>
+						<SidebarToggler />
+					</HeaderToolbar>
+				) : null}
 				{onClickBack && <IconButton small mie={8} icon='arrow-back' onClick={onClickBack} title={t('Back')} />}
 				<Box is='h1' fontScale='h2' flexGrow={1} data-qa-type='PageHeader-title'>
 					{title}

@@ -23,7 +23,6 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
 	const [navBarSearchExpanded, setNavBarSearchExpanded] = useState(false);
 	const breakpoints = useBreakpoints(); // ["xs", "sm", "md", "lg", "xl", xxl"]
 	const [hiddenActions, setHiddenActions] = useState(hiddenActionsDefaultValue);
-	const enhancedNavigationEnabled = useFeaturePreview('newNavigation');
 	const secondSidebarEnabled = useFeaturePreview('secondarySidebar');
 
 	const router = useRouter();
@@ -33,7 +32,7 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
 	const isMobile = !breakpoints.includes('md');
 	const isTablet = !breakpoints.includes('lg');
 
-	const shouldToggle = enhancedNavigationEnabled ? isTablet || isMobile : isMobile;
+	const shouldToggle = isTablet || isMobile;
 	const shouldDisplaySidePanel = !isTablet || displaySidePanel;
 	const defaultSidebarWidth = secondSidebarEnabled ? '220px' : '240px';
 
