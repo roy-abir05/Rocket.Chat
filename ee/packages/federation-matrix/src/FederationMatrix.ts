@@ -203,9 +203,15 @@ export class FederationMatrix extends ServiceClass implements IFederationMatrixS
 		try {
 			const matrixUserId = userIdSchema.parse(getUserMatrixId(owner, this.serverName));
 			const roomName = room.name || room.fname || 'Untitled Room';
+			const ownerDisplayName = owner.name || owner.username;
 
 			// canonical alias computed from name
-			const matrixRoomResult = await this.homeserverServices.room.createRoom(matrixUserId, roomName, room.t === 'c' ? 'public' : 'invite');
+			const matrixRoomResult = await this.homeserverServices.room.createRoom(
+				matrixUserId,
+				roomName,
+				room.t === 'c' ? 'public' : 'invite',
+				ownerDisplayName,
+			);
 
 			this.logger.debug('Matrix room created:', matrixRoomResult);
 
@@ -284,9 +290,15 @@ export class FederationMatrix extends ServiceClass implements IFederationMatrixS
 				);
 				matrixRoomResult = { room_id: roomId };
 			} else {
-				// For group DMs (more than 2 members), create a private room
+				// for group DMs (more than 2 members), create a private room
 				const roomName = room.name || room.fname || `Group chat with ${members.length} members`;
-				matrixRoomResult = await this.homeserverServices.room.createRoom(userIdSchema.parse(actualMatrixUserId), roomName, 'invite');
+				const creatorDisplayName = creator.name || creator.username;
+				matrixRoomResult = await this.homeserverServices.room.createRoom(
+					userIdSchema.parse(actualMatrixUserId),
+					roomName,
+					'invite',
+					creatorDisplayName,
+				);
 
 				for await (const member of members) {
 					if (member._id === creatorId) {
@@ -298,10 +310,13 @@ export class FederationMatrix extends ServiceClass implements IFederationMatrixS
 					}
 
 					try {
+						const memberDisplayName = member.name || member.username;
 						await this.homeserverServices.invite.inviteUserToRoom(
 							userIdSchema.parse(member.username),
 							roomIdSchema.parse(matrixRoomResult.room_id),
 							userIdSchema.parse(actualMatrixUserId),
+							true,
+							memberDisplayName,
 						);
 					} catch (error) {
 						this.logger.error('Error creating or updating bridged user for DM:', error);
@@ -572,10 +587,13 @@ export class FederationMatrix extends ServiceClass implements IFederationMatrixS
 						? getUserMatrixId(userToInvite, this.serverName)
 						: userIdSchema.parse(`@${username}:${this.serverName}`);
 
+					const displayName = userToInvite ? userToInvite.name || userToInvite.username : undefined;
 					const result = await this.homeserverServices.invite.inviteUserToRoom(
 						inviteeMatrixId,
 						roomIdSchema.parse(room.federation.mrid),
 						userIdSchema.parse(inviterUserId),
+						false,
+						displayName,
 					);
 
 					return acceptInvite(result.event, username, this.homeserverServices);
