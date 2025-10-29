@@ -55,9 +55,11 @@ const AutoCompleteDepartmentMultiple = ({
 
 	const renderItem = ({ label, value, ...props }: ComponentProps<typeof Option>): ReactElement => {
 		if (withCheckbox) {
+			// CheckOption is not a forwardRef component.
+			const { ref: _ref, ...restProps } = props;
 			return (
 				<CheckOption
-					{...props}
+					{...restProps}
 					label={<span style={{ whiteSpace: 'normal' }}>{label}</span>}
 					selected={value ? selectedValues.has(value) : false}
 				/>
