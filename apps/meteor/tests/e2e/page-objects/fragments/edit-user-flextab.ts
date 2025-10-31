@@ -16,31 +16,31 @@ export class EditUserFlexTab extends FlexTab {
 	}
 
 	get inputName(): Locator {
-		return this.root.locator('//label[text()="Name"]/following-sibling::span//input');
+		return this.root.getByLabel('Name', { exact: true });
 	}
 
 	get inputUserName(): Locator {
-		return this.root.locator('//label[text()="Username"]/following-sibling::span//input');
+		return this.root.getByLabel('Username', { exact: true });
 	}
 
 	get inputEmail(): Locator {
-		return this.root.locator('//label[text()="Email"]/following-sibling::span//input').first();
+		return this.root.getByLabel('Email', { exact: true }).first();
 	}
 
 	get inputSetManually(): Locator {
-		return this.root.locator('//label[text()="Set manually"]');
+		return this.root.getByLabel('Set manually', { exact: true });
 	}
 
 	get inputPassword(): Locator {
-		return this.root.locator('input[placeholder="Password"]');
+		return this.root.getByLabel('Password', { exact: true });
 	}
 
 	get inputConfirmPassword(): Locator {
-		return this.root.locator('input[placeholder="Confirm password"]');
+		return this.root.getByLabel('Confirm password', { exact: true });
 	}
 
 	get joinDefaultChannels(): Locator {
-		return this.root.locator('//label[text()="Join default channels"]');
+		return this.root.getByLabel('Join default channels', { exact: true });
 	}
 
 	get userRole(): Locator {
@@ -48,7 +48,7 @@ export class EditUserFlexTab extends FlexTab {
 	}
 
 	get setupSmtpLink(): Locator {
-		return this.root.locator('role=link[name="Set up SMTP"]');
+		return this.root.getByRole('link', { name: 'Set up SMTP' });
 	}
 
 	getCustomField(fieldName: string): Locator {
