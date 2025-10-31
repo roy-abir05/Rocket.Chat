@@ -309,6 +309,7 @@ jobs:
               --debug \
               --annotation "manifest-descriptor:org.opencontainers.image.description=Build run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
               --tag "${IMAGE}" \
+              --tag "${IMAGE}-gha-run-${{ github.run_id }}" \
               ${refs[@]}
           done
 
