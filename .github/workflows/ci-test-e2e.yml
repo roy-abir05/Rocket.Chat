@@ -65,7 +65,7 @@ env:
   MONGO_URL: mongodb://localhost:27017/rocketchat?replicaSet=rs0&directConnection=true
   TOOL_NODE_FLAGS: ${{ vars.TOOL_NODE_FLAGS }}
   LOWERCASE_REPOSITORY: ${{ inputs.lowercase-repo }}
-  DOCKER_TAG: ${{ inputs.gh-docker-tag }}
+  DOCKER_TAG: ${{ inputs.gh-docker-tag }}-cov
 
 jobs:
   test:
